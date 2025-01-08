@@ -4,17 +4,18 @@ import axios from 'axios';
 const apiKey = import.meta.env.VITE_API_KEY;
 
 
+
 const Weather = () => {
-  console.log(apiKey);
+  // console.log(apiKey);
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
-
+  
   const fetchWeatherData = async () => {
     try {
       const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`
       );
-      console.log(response.data);
+      // console.log(response.data);
       setWeatherData(response.data);
     } catch (error) {
       console.log(error);
