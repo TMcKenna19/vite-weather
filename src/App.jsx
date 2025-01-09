@@ -13,3 +13,10 @@ function App() {
 }
 
 export default App
+
+//[x] Weather api by city
+//[x] Time of day greeting 
+//[ ] Location based weather
+//[ ] (x)Day forcast 
+//[ ] Hourly forcast 
+//[ ] Background change  time of day / weather
