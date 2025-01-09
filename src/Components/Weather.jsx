@@ -43,6 +43,7 @@ const Weather = () => {
         <div>
           <h2>{weatherData.name}</h2>
           <p>Forcast: {weatherData.weather[0].description}</p>
+          <img src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`} alt="" />
           <p>Current Temperature: {Math.round((weatherData.main.temp - 273.15) * 1.8 + 32)}</p>
           <p>Low: {Math.round((weatherData.main.temp_min -273.15) * 1.8 + 32) } / High: {Math.round((weatherData.main.temp_max -273.15) * 1.8 + 32)}</p>
         </div>
