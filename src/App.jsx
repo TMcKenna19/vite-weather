@@ -1,6 +1,7 @@
 import './App.css';
 import Weather from './Components/Weather';
 import Greeting from './Components/Greeting';
+import ZipCode from './Components/ZipCode';
 
 function App() {
 
@@ -8,15 +9,17 @@ function App() {
     <>
       <Greeting/>
       <Weather/>
+      <ZipCode/>
     </>
   )
 }
 
 export default App
 
-//[x] Weather api by city
+//[x] Weather by city
 //[x] Time of day greeting 
-//[ ] Location based weather
+//[x] Weather by zip
+//[ ] Weather by location
 //[ ] (x)Day forcast 
 //[ ] Hourly forcast 
-//[ ] Background change  time of day / weather
+//[ ] Background change time of day / weather
