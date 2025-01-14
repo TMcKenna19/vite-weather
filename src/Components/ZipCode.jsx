@@ -46,10 +46,10 @@ const ZipCode = () => {
       </form>
       {weatherData && (
         <div className='weather-card'>
-          <p>{timeString}</p>
-          <h1>{weatherData.name}</h1>
-          <h2>Forcast: {weatherData.weather[0].description} <img className='weather-icon' src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`} alt="" /></h2>
-          <h2>Current Temperature: {Math.round((weatherData.main.temp))}</h2>
+          <h1>{weatherData.name} {timeString}</h1>
+          <h2>{Math.round((weatherData.main.temp))} &deg;F</h2>
+          <h2>{weatherData.weather[0].description}</h2>
+          <img className='weather-icon' src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`} alt="" />
           <h2>Low: {Math.round((weatherData.main.temp_min)) } / High: {Math.round((weatherData.main.temp_max))}</h2>
         </div>
       )}

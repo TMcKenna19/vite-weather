@@ -30,4 +30,15 @@ button {
   margin-left: .5rem;
 }
 
+.weather-card {
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 2rem;
+  width: 50rem;
+  margin-top: 1rem;
+}
+
 
