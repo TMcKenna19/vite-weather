@@ -7,8 +7,9 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 const ZipCode = () => {
   const [zipCode, setZipCode] = useState("");
   const [weatherData, setWeatherData] = useState(null);
-  // console.log(API_KEY);
-  
+  const date = new Date();
+  const showTime = date.getHours() + ':' + date.getMinutes() 
+
   const fetchWeatherData = async () => {
     try {
       const response = await axios.get(
@@ -17,6 +18,7 @@ const ZipCode = () => {
       console.log(zipCode);
       console.log(response.data);
       setWeatherData(response.data);
+      getTime();
     } catch (error) {
       console.log(error);
     }
@@ -26,9 +28,9 @@ const ZipCode = () => {
     event.preventDefault();
     fetchWeatherData()
   };
+
   return (
     <div>
-        <h1> </h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -36,13 +38,13 @@ const ZipCode = () => {
           value={zipCode}
           onChange={(event) => setZipCode(event.target.value)}
         />
-        <button type="submit">Get Weather</button>
+        {/* <button type="submit">Get Weather</button> */}
       </form>
       {weatherData && (
-        <div>
+        <div className='weather-card'>
+          <p>{showTime}</p>
           <h1>{weatherData.name}</h1>
-          <img className='weather-icon' src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`} alt="" />
-          <h2>Forcast: {weatherData.weather[0].description}</h2>
+          <h2>Forcast: {weatherData.weather[0].description} <img className='weather-icon' src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`} alt="" /></h2>
           <h2>Current Temperature: {Math.round((weatherData.main.temp))}</h2>
           <h2>Low: {Math.round((weatherData.main.temp_min)) } / High: {Math.round((weatherData.main.temp_max))}</h2>
         </div>

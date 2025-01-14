@@ -33,11 +33,11 @@ const Weather = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Enter city name"
+          placeholder="Enter City Name"
           value={city}
           onChange={(event) => setCity(event.target.value)}
         />
-        <button type="submit">Get Weather</button>
+        {/* <button type="submit">Get Weather</button> */}
       </form>
       {weatherData && (
         <div>
