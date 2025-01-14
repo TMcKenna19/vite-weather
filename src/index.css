@@ -4,8 +4,9 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: #ffffffde;
-  background-image: linear-gradient(to top left, #2d2d2d 0%, #636363 100%);
+  color: #ffffff;
+  background-image: linear-gradient(to bottom left, #537895 0%, #09203F 100%);
+
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

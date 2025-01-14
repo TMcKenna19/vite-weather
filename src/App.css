@@ -6,15 +6,22 @@
 }
 
 input, textarea {
-  color: #ffffffde;
+  color: #ffffff;
   height: 2rem;
   width: 15rem;
-  background-color: #262626;
+  background-color: #03162fd0;
   border-radius: 20px;
   border: 0px;
   padding: 5px;
   font-size: 1rem;
   text-align: center;
+}
+::placeholder {
+  color:#ffffff ;
+}
+
+input:focus::placeholder {
+  color: transparent;
 }
 
 button {
@@ -31,6 +38,7 @@ button {
 }
 
 .weather-card {
+  background-color: rgba(240, 248, 255, 0.30);
   padding: 1rem;
   display: flex;
   flex-direction: row;

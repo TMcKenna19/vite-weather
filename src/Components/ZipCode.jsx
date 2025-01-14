@@ -7,12 +7,14 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 const ZipCode = () => {
   const [zipCode, setZipCode] = useState("");
   const [weatherData, setWeatherData] = useState(null);
-  
+
   const now = new Date();
   const hours = now.getHours();
+  const ampm = hours >= 12 ? 'PM' : 'AM'
+  const hour = hours % 12 || 12;
   const minutes = now.getMinutes();
   const formatMinutes = minutes < 10 ? '0' + minutes : minutes;
-  const timeString = `${hours}:${formatMinutes}`
+  const timeString = `${hour}:${formatMinutes} ${ampm}`
 
   const fetchWeatherData = async () => {
     try {
@@ -38,7 +40,7 @@ const ZipCode = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Enter Zip Code"
+          placeholder="Search Zip Code"
           value={zipCode}
           onChange={(event) => setZipCode(event.target.value)}
         />
