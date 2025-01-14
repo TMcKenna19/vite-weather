@@ -7,8 +7,12 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 const ZipCode = () => {
   const [zipCode, setZipCode] = useState("");
   const [weatherData, setWeatherData] = useState(null);
-  const date = new Date();
-  const showTime = date.getHours() + ':' + date.getMinutes() 
+  
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  const formatMinutes = minutes < 10 ? '0' + minutes : minutes;
+  const timeString = `${hours}:${formatMinutes}`
 
   const fetchWeatherData = async () => {
     try {
@@ -42,7 +46,7 @@ const ZipCode = () => {
       </form>
       {weatherData && (
         <div className='weather-card'>
-          <p>{showTime}</p>
+          <p>{timeString}</p>
           <h1>{weatherData.name}</h1>
           <h2>Forcast: {weatherData.weather[0].description} <img className='weather-icon' src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`} alt="" /></h2>
           <h2>Current Temperature: {Math.round((weatherData.main.temp))}</h2>
