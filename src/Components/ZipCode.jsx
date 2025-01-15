@@ -21,10 +21,9 @@ const ZipCode = () => {
       const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?zip=${zipCode},us&appid=${API_KEY}&units=imperial`
       );
-      console.log(zipCode);
+      console.log("zip code:", zipCode);
       console.log(response.data);
       setWeatherData(response.data);
-      getTime();
     } catch (error) {
       console.log(error);
     }
