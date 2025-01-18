@@ -20,6 +20,7 @@ export default App
 //[x] Time of day greeting 
 //[x] Weather by zip
 //[x] As of current time 
+//[ ] Weather icon library 
 //[ ] Weather by location
 //[ ] (x)Day forcast 
 //[ ] Hourly forcast 
