@@ -16,22 +16,16 @@ const ZipCode = () => {
       const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?zip=${zipCode},us&appid=${API_KEY}&units=imperial`
       );
-      // console.log("zip code:", zipCode);
-      // console.log(response.data);
       setWeatherData(response.data);
-      const timezoneOffset = response.data.timezone; // Offset in seconds
-      // Get the current UTC time
+      const timezoneOffset = response.data.timezone;
       const utcDate = new Date();
-      // Calculate the local time by adjusting the UTC time with the timezone offset
       const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
-      // Format the calculated local time for display
       const formattedLocalTime = localDate.toLocaleString("en-US", {
         timeZone: "UTC",
         hour: "2-digit",
         minute: "2-digit",
-        hour12: true, // Optional: Use 12-hour format
+        hour12: true
       });
-      // Update the local time in the state
       setLocalTime(formattedLocalTime);
     } catch (error) {
       console.log(error);
