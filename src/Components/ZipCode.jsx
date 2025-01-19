@@ -22,7 +22,7 @@ const ZipCode = () => {
       const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
       const formattedLocalTime = localDate.toLocaleString("en-US", {
         timeZone: "UTC",
-        hour: "2-digit",
+        hour: "numeric",
         minute: "2-digit",
         hour12: true
       });
