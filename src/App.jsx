@@ -9,7 +9,7 @@ function App() {
     <>
       <Greeting/>
       <WeatherLocation/>
-      {/* <ZipCode/> */}
+      <ZipCode/>
     </>
   )
 }
@@ -20,8 +20,8 @@ export default App
 //[x] Time of day greeting 
 //[x] Weather by zip
 //[x] As of current time
-//[ ] Five day forcast 
 //[ ] Weather by location
+//[ ] Five day forcast 
 //[ ] Weather icon library 
 //[ ] (x)Day forcast 
 //[ ] Hourly forcast 

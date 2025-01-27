@@ -9,7 +9,7 @@ const ZipCode = () => {
   const [zipCode, setZipCode] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [localTime, setLocalTime] = useState(null);
-  
+ 
   const fetchWeatherData = async () => {
     try {
       const response = await axios.get(
