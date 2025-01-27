@@ -49,4 +49,9 @@ button {
   margin-top: 1rem;
 }
 
+.weather-icon {
+  height: 100px;
+  width: 100px;
+}
+
 

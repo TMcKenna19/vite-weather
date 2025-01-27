@@ -1,7 +1,6 @@
 import React from 'react'
 import { useState} from 'react';
 import { useEffect } from 'react';
-
 import axios from 'axios';
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -55,7 +54,8 @@ const ZipCode = () => {
       </form>
       {weatherData && (
         <div className='weather-card'>
-          <h1>{weatherData.name} {localTime}</h1>
+          <h1>{weatherData.name}</h1>
+          <h2>{localTime}</h2>
           <h2>{Math.round((weatherData.main.temp))} &deg;F</h2>
           <h2>{weatherData.weather[0].description}</h2>
           <img className='weather-icon' src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`} alt="" />

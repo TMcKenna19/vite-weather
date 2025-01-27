@@ -4,17 +4,10 @@ import axios from 'axios';
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 
-const Weather = () => {
+const WeatherLocation = () => {
   const [city, setCity] = useState("");
   const [weatherData, setWeatherData] = useState(null);
-
-  const now = new Date();
-  const hours = now.getHours();
-  const ampm = hours >= 12 ? 'PM' : 'AM'
-  const hour = hours % 12 || 12;
-  const minutes = now.getMinutes();
-  const formatMinutes = minutes < 10 ? '0' + minutes : minutes;
-  const timeString = `${hour}:${formatMinutes} ${ampm}`
+  const [localTime, setLocalTime] = useState(null);
   
   const fetchWeatherData = async () => {
     try {
@@ -24,6 +17,16 @@ const Weather = () => {
       console.log(city);
       console.log(response.data);
       setWeatherData(response.data);
+      const timezoneOffset = response.data.timezone;
+      const utcDate = new Date();
+      const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
+      const formattedLocalTime = localDate.toLocaleString("en-US", {
+        timeZone: "UTC",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      });
+      setLocalTime(formattedLocalTime);
     } catch (error) {
       console.log(error);
     }
@@ -48,7 +51,8 @@ const Weather = () => {
         <br />
       {weatherData && (
         <div className='weather-card'>
-          <h1>{weatherData.name} {timeString}</h1>
+          <h1>{weatherData.name}</h1>
+          <h2>{localTime}</h2>
           <h2>{Math.round((weatherData.main.temp))} &deg;F</h2>
           <h2>{weatherData.weather[0].description}</h2>
           <img className='weather-icon' src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`} alt="" />
@@ -60,4 +64,4 @@ const Weather = () => {
   )
 }
 
-export default Weather;
+export default WeatherLocation;
