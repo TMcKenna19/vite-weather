@@ -15,47 +15,39 @@ const WeatherLocation = () => {
       alert("Your browser does not support geolocation. Please update your browser.");
       return;
     }
-
+    
     const fetchLocationAndWeather = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
           setLocation({ latitude, longitude });
-          // Fetch weather data using the coordinates
-          fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`)
-            .then((response) => response.json())
-            .then((data) => {
-              setWeatherData(data);
-              console.log("Weather Data:", data);
-              const timezoneOffset = data.timezone;
+          axios.get(`https://api.openweathermap.org/data/2.5/weather`, {
+              params: {
+                lat: latitude,
+                lon: longitude,
+                appid: API_KEY,
+              },
+            }).then((response) => {
+              setWeatherData(response.data);
+              console.log("Weather Data:", response.data);
+              const timezoneOffset = response.data.timezone;
               const utcDate = new Date();
               const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
               const formattedLocalTime = localDate.toLocaleString("en-US", {
                 timeZone: "UTC",
                 hour: "numeric",
                 minute: "2-digit",
-                hour12: true
+                hour12: true,
               });
-      setLocalTime(formattedLocalTime);
+              setLocalTime(formattedLocalTime);
             })
-            .catch((error) => console.error("Error fetching weather data:", error));
+            .catch((error) => {
+              console.error("Error fetching weather data:", error);
+            });
         },
         (error) => {
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              console.log("User denied the request for Geolocation.");
-              break;
-            case error.POSITION_UNAVAILABLE:
-              console.log("Location information is unavailable.");
-              break;
-            case error.TIMEOUT:
-              console.log("The request to get user location timed out.");
-              break;
-            default:
-              console.log("An unknown error occurred.");
-              break;
-          }
+          console.error("Error getting location:", error);
         }
       );
     };

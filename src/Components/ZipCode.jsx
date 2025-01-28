@@ -36,9 +36,9 @@ const ZipCode = () => {
     fetchWeatherData()
   };
 
-  useEffect(() => {
-    console.log("Updated Local Time:", localTime);
-  }, [localTime]);
+  // useEffect(() => {
+  //   console.log("Updated Local Time:", localTime);
+  // }, [localTime]);
   
   
   return (
@@ -50,7 +50,6 @@ const ZipCode = () => {
           value={zipCode}
           onChange={(event) => setZipCode(event.target.value)}
         />
-        {/* <button type="submit">Get Weather</button> */}
       </form>
       {weatherData && (
         <div className='weather-card'>
