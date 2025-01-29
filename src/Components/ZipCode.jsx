@@ -35,12 +35,7 @@ const ZipCode = () => {
     event.preventDefault();
     fetchWeatherData()
   };
-
-  // useEffect(() => {
-  //   console.log("Updated Local Time:", localTime);
-  // }, [localTime]);
-  
-  
+ 
   return (
     <div>
       <form onSubmit={handleSubmit}>

@@ -1,60 +1,47 @@
-import React from 'react'
-import { useState } from 'react';
+import React from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
-import { useEffect } from 'react';
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-
 const WeatherLocation = () => {
-  const [location, setLocation] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [localTime, setLocalTime] = useState(null);
- 
+  const fetchWeatherData = useCallback((latitude, longitude) => {
+    axios.get("https://api.openweathermap.org/data/2.5/weather", {
+        params: { lat: latitude, lon: longitude, appid: API_KEY },
+      })
+      .then((response) => {
+        setWeatherData(response.data);
+        console.log("Weather Data:", response.data);
+        const timezoneOffset = response.data.timezone;
+        const utcDate = new Date();
+        const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
+        setLocalTime(
+          localDate.toLocaleString("en-US", {
+            timeZone: "UTC",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching weather data:", error);
+      });
+  }, []);
+
   useEffect(() => {
     if (!navigator.geolocation) {
-      alert("Your browser does not support geolocation. Please update your browser.");
+      alert("Geolocation is not supported by your browser.");
       return;
     }
-    
-    const fetchLocationAndWeather = () => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          setLocation({ latitude, longitude });
-          axios.get(`https://api.openweathermap.org/data/2.5/weather`, {
-              params: {
-                lat: latitude,
-                lon: longitude,
-                appid: API_KEY,
-              },
-            }).then((response) => {
-              setWeatherData(response.data);
-              console.log("Weather Data:", response.data);
-              const timezoneOffset = response.data.timezone;
-              const utcDate = new Date();
-              const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
-              const formattedLocalTime = localDate.toLocaleString("en-US", {
-                timeZone: "UTC",
-                hour: "numeric",
-                minute: "2-digit",
-                hour12: true,
-              });
-              setLocalTime(formattedLocalTime);
-            })
-            .catch((error) => {
-              console.error("Error fetching weather data:", error);
-            });
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-        }
-      );
-    };
 
-    fetchLocationAndWeather();
-  }, [API_KEY]); // Dependencies: Runs only once unless API_KEY changes
-  
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: { latitude, longitude } }) => fetchWeatherData(latitude, longitude),
+      (error) => console.error("Error getting location:", error)
+    );
+  }, [fetchWeatherData]);
+
   return (
     <div>
       {weatherData ? (
