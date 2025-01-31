@@ -37,7 +37,7 @@ button {
   margin-left: .5rem;
 }
 
-.weather-card {
+.current-weather {
   background-color: rgba(240, 248, 255, 0.30);
   padding: 1rem;
   display: flex;
@@ -47,6 +47,24 @@ button {
   border-radius: 2rem;
   width: 60rem;
   margin-top: 1rem;
+}
+
+.forecast-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.forecast-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.forecast-card {
+  background: rgba(240, 248, 255, 0.30);
+  padding: 1rem;
+  border-radius: 1rem;
+  text-align: center;
 }
 
 .weather-icon {

@@ -19,9 +19,9 @@ export default App
 //[x] Weather by city
 //[x] Time of day greeting 
 //[x] Weather by zip
-//[x] As of current time
+//[x] Current time
 //[x] Weather by location
-//[ ] Five day forcast 
+//[x] Five day forcast 
 //[ ] Weather icon library 
 //[ ] (x)Day forcast 
 //[ ] Hourly forcast 
