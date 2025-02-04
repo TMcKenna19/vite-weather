@@ -3,6 +3,23 @@ import axios from 'axios';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
+// U.S. State Abbreviation Lookup
+const stateAbbreviations = {
+  "Alabama": "AL", "Alaska": "AK", "Arizona": "AZ", "Arkansas": "AR",
+  "California": "CA", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE",
+  "Florida": "FL", "Georgia": "GA", "Hawaii": "HI", "Idaho": "ID",
+  "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS",
+  "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Maryland": "MD",
+  "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS",
+  "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV",
+  "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY",
+  "North Carolina": "NC", "North Dakota": "ND", "Ohio": "OH", "Oklahoma": "OK",
+  "Oregon": "OR", "Pennsylvania": "PA", "Rhode Island": "RI", "South Carolina": "SC",
+  "South Dakota": "SD", "Tennessee": "TN", "Texas": "TX", "Utah": "UT",
+  "Vermont": "VT", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV",
+  "Wisconsin": "WI", "Wyoming": "WY"
+};
+
 // Utility Function for Temperature Conversion
 const kelvinToFahrenheit = (kelvin) => Math.round((kelvin - 273.15) * 1.8 + 32);
 
@@ -10,6 +27,7 @@ const WeatherLocation = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState([]);
   const [localTime, setLocalTime] = useState('');
+  const [stateAbbr, setStateAbbr] = useState('');
   const [error, setError] = useState(null);
 
   const fetchWeatherAndForecast = async (latitude, longitude) => {
@@ -41,6 +59,15 @@ const WeatherLocation = () => {
         .slice(0, 5);
       setForecastData(dailyForecast);
 
+      // Fetch State Information using Reverse Geocoding API
+      const geoResponse = await axios.get("https://api.openweathermap.org/geo/1.0/reverse", {
+        params: { lat: latitude, lon: longitude, limit: 1, appid: API_KEY },
+      });
+
+      const locationData = geoResponse.data[0];
+      const fullStateName = locationData.state || ""; 
+      const abbreviation = stateAbbreviations[fullStateName] || fullStateName;
+      setStateAbbr(abbreviation);
     } catch (err) {
       console.error("Error fetching data:", err);
       setError("Failed to load weather data. Please try again later.");
@@ -64,7 +91,7 @@ const WeatherLocation = () => {
   return (
     <div>
       <div className="current-weather">
-        <h1>{weatherData.name}</h1>
+        <h1>{weatherData.name}, {stateAbbr}</h1>
         <h2>{localTime}</h2>
         <h2>{kelvinToFahrenheit(weatherData.main.temp)} &deg;F</h2>
         <h2>{weatherData.weather[0].description}</h2>
