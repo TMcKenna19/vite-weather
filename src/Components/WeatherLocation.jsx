@@ -22,9 +22,11 @@ const stateAbbreviations = {
 
 // Utility Function for Temperature Conversion
 const kelvinToFahrenheit = (kelvin) => Math.round((kelvin - 273.15) * 1.8 + 32);
+const celsiusToFahrenheit = (celsius) => Math.round((celsius * 1.8 + 32));
 
 const WeatherLocation = () => {
   const [weatherData, setWeatherData] = useState(null);
+  const [hourlyForecast, setHourlyForecast] = useState([]);
   const [forecastData, setForecastData] = useState([]);
   const [localTime, setLocalTime] = useState('');
   const [stateAbbr, setStateAbbr] = useState('');
@@ -40,12 +42,15 @@ const WeatherLocation = () => {
           params: { lat: latitude, lon: longitude, appid: API_KEY, units: "metric" },
         }),
       ]);
-
-      console.log("currentWeather.data", currentWeather);
       setWeatherData(currentWeather.data);
+
+      const hourlyData = forecast.data.list.slice(0, 5);
+      setHourlyForecast(hourlyData);
+
       const timezoneOffset = currentWeather.data.timezone;
       const utcDate = new Date();
       const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
+
       setLocalTime(localDate.toLocaleString("en-US", { 
         timeZone: "UTC",
         hour: "numeric", 
@@ -53,7 +58,6 @@ const WeatherLocation = () => {
         hour12: true 
       }
       ));
-
       const dailyForecast = forecast.data.list
         .filter(item => item.dt_txt.includes("12:00:00"))
         .slice(0, 5);
@@ -63,7 +67,6 @@ const WeatherLocation = () => {
       const geoResponse = await axios.get("https://api.openweathermap.org/geo/1.0/reverse", {
         params: { lat: latitude, lon: longitude, limit: 1, appid: API_KEY },
       });
-
       const locationData = geoResponse.data[0];
       const fullStateName = locationData.state || ""; 
       const abbreviation = stateAbbreviations[fullStateName] || fullStateName;
@@ -94,6 +97,7 @@ const WeatherLocation = () => {
         <h1>{weatherData.name}, {stateAbbr}</h1>
         <h2>{localTime}</h2>
         <h2>{kelvinToFahrenheit(weatherData.main.temp)} &deg;F</h2>
+        <h2>Feels like {kelvinToFahrenheit(weatherData.main.feels_like)} &deg;F</h2>
         <h2>{weatherData.weather[0].description}</h2>
         <img
           className="weather-icon"
@@ -105,7 +109,28 @@ const WeatherLocation = () => {
           High: {kelvinToFahrenheit(weatherData.main.temp_max)}
         </h2>
       </div>
-
+      <div className="hourly-forecast">
+        <h2>Hourly Forecast</h2>
+        <div className="hourly-grid">
+          {hourlyForecast.map((hour, index) => (
+            <div key={index} className="hour-card">
+              <h3>
+                {new Date(hour.dt * 1000).toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </h3>
+              <img
+                src={`http://openweathermap.org/img/w/${hour.weather[0].icon}.png`}
+                alt={hour.weather[0].description}
+              />
+              <p>{celsiusToFahrenheit(hour.main.temp)}°F</p>
+              <p>{hour.weather[0].description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
       <div className="forecast-container">
         <h2>Your 5 Day Forecast</h2>
         <div className="forecast-grid">
@@ -116,7 +141,7 @@ const WeatherLocation = () => {
                 src={`http://openweathermap.org/img/w/${day.weather[0].icon}.png`}
                 alt={day.weather[0].description}
               />
-              <p>{Math.round(day.main.temp * 1.8 + 32)} &deg;F</p>
+              <p>{celsiusToFahrenheit(day.main.temp)} &deg;F</p>
               <p>{day.weather[0].description}</p>
             </div>
           ))}

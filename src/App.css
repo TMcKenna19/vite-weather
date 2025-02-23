@@ -45,7 +45,7 @@ button {
   justify-content: space-around;
   align-items: center;
   border-radius: 2rem;
-  width: 60rem;
+  width: 70rem;
   margin-top: 1rem;
 }
 
@@ -70,6 +70,20 @@ button {
 .weather-icon {
   height: 100px;
   width: 100px;
+}
+
+.hourly-grid, .forecast-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.hour-card {
+  /* background: #ecf0f1; */
+  padding: .2rem;
+  text-align: center;
+  width: fit-content;
 }
 
 
