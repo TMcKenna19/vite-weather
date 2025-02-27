@@ -22,7 +22,6 @@ export default App
 //[x] Current time
 //[x] Weather by location
 //[x] Five day forcast 
+//[x] Hourly forcast 
 //[ ] Weather icon library 
-//[ ] (x)Day forcast 
-//[ ] Hourly forcast 
 //[ ] Background change time of day / weather

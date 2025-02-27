@@ -24,11 +24,19 @@ const stateAbbreviations = {
 const kelvinToFahrenheit = (kelvin) => Math.round((kelvin - 273.15) * 1.8 + 32);
 const celsiusToFahrenheit = (celsius) => Math.round((celsius * 1.8 + 32));
 
+function getDate() {
+  const dayName = new Date().toLocaleString('en-us', {weekday:'long'})
+  const month = new Date().toLocaleString('en-us', {month:'short'})
+  const day = new Date().getDate();
+  return `${dayName}, ${month} ${day}`
+}
+
 const WeatherLocation = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [hourlyForecast, setHourlyForecast] = useState([]);
   const [forecastData, setForecastData] = useState([]);
   const [localTime, setLocalTime] = useState('');
+  const [currentDate, setCurrentDate] = useState(getDate());
   const [stateAbbr, setStateAbbr] = useState('');
   const [error, setError] = useState(null);
 
@@ -43,14 +51,13 @@ const WeatherLocation = () => {
         }),
       ]);
       setWeatherData(currentWeather.data);
-
       const hourlyData = forecast.data.list.slice(0, 5);
       setHourlyForecast(hourlyData);
 
       const timezoneOffset = currentWeather.data.timezone;
       const utcDate = new Date();
       const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
-
+      
       setLocalTime(localDate.toLocaleString("en-US", { 
         timeZone: "UTC",
         hour: "numeric", 
@@ -76,7 +83,7 @@ const WeatherLocation = () => {
       setError("Failed to load weather data. Please try again later.");
     }
   };
-
+  
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -93,61 +100,80 @@ const WeatherLocation = () => {
 
   return (
     <div>
-      <div className="current-weather">
-        <h1>{weatherData.name}, {stateAbbr}</h1>
-        <h2>{localTime}</h2>
-        <h2>{kelvinToFahrenheit(weatherData.main.temp)} &deg;F</h2>
-        <h2>Feels like {kelvinToFahrenheit(weatherData.main.feels_like)} &deg;F</h2>
-        <h2>{weatherData.weather[0].description}</h2>
-        <img
-          className="weather-icon"
-          src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`}
-          alt={weatherData.weather[0].description}
-        />
-        <h2>
-          Low: {kelvinToFahrenheit(weatherData.main.temp_min)} / 
-          High: {kelvinToFahrenheit(weatherData.main.temp_max)}
-        </h2>
-      </div>
-      <div className="hourly-forecast">
-        <h2>Hourly Forecast</h2>
-        <div className="hourly-grid">
-          {hourlyForecast.map((hour, index) => (
-            <div key={index} className="hour-card">
-              <h3>
-                {new Date(hour.dt * 1000).toLocaleTimeString("en-US", {
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
-                })}
-              </h3>
-              <img
-                src={`http://openweathermap.org/img/w/${hour.weather[0].icon}.png`}
-                alt={hour.weather[0].description}
-              />
-              <p>{celsiusToFahrenheit(hour.main.temp)}°F</p>
-              <p>{hour.weather[0].description}</p>
-            </div>
-          ))}
+      <div className="current-weather-container">
+        <div className="location-time">
+          <h1>{weatherData.name}, {stateAbbr}</h1>
+          <h2>{localTime}</h2>
+          <h2>{currentDate}</h2>
+        </div>
+        <div className="current-weather">
+          <h2 className="temp">{kelvinToFahrenheit(weatherData.main.temp)}°F</h2>
+          <img
+            className="weather-icon"
+            src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`}
+            alt={weatherData.weather[0].description}
+          />
+          <h2 className="feels-like">Feels like {kelvinToFahrenheit(weatherData.main.feels_like)}°F</h2>
+          <h2 className="humidity">Humidity: {weatherData.main.humidity}%</h2>
+          <h2 className="description">{weatherData.weather[0].description}</h2>
+          <h2 className="high-low">
+            H: {kelvinToFahrenheit(weatherData.main.temp_max)}°F / L: {kelvinToFahrenheit(weatherData.main.temp_min)}°F
+          </h2>
+          <h2 className="sunrise">Sunrise: {new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })}</h2>
+          <h2 className="sunset">Sunset: {new Date(weatherData.sys.sunset * 1000).toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })}</h2>
         </div>
       </div>
       <div className="forecast-container">
-        <h2>Your 5 Day Forecast</h2>
-        <div className="forecast-grid">
-          {forecastData.map((day, index) => (
-            <div key={index} className="forecast-card">
-              <h3>{new Date(day.dt * 1000).toLocaleDateString("en-US", { weekday: "long" })}</h3>
-              <img
-                src={`http://openweathermap.org/img/w/${day.weather[0].icon}.png`}
-                alt={day.weather[0].description}
-              />
-              <p>{celsiusToFahrenheit(day.main.temp)} &deg;F</p>
-              <p>{day.weather[0].description}</p>
-            </div>
-          ))}
+        <div className="five-day-forecast">
+          <h2>Your 5 Day Forecast</h2>
+          <div className="five-day-table">
+            {forecastData.map((day, index) => (
+                <tbody key={index} className="five-day-row">
+                  <tr>
+                    <th><img
+                      src={`http://openweathermap.org/img/w/${day.weather[0].icon}.png`}
+                      alt={day.weather[0].description}
+                    /></th>
+                    <th>{new Date(day.dt * 1000).toLocaleDateString("en-US", { weekday: "long" })}</th>
+                    <th>{celsiusToFahrenheit(day.main.temp)} &deg;F</th>
+                    <th>{day.weather[0].description}</th>
+                  </tr>
+                </tbody>
+            ))}
+          </div>
+        </div>
+        <div className="hourly-forecast">
+          <h2>Hourly Forecast</h2>
+          <div className="hourly-grid">
+            {hourlyForecast.map((hour, index) => (
+              <div key={index} className="hour-card">
+                <h3>
+                  {new Date(hour.dt * 1000).toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true,
+                  })}
+                </h3>
+                <img
+                  src={`http://openweathermap.org/img/w/${hour.weather[0].icon}.png`}
+                  alt={hour.weather[0].description}
+                />
+                <p>{celsiusToFahrenheit(hour.main.temp)}°F</p>
+                <p>{hour.weather[0].description}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+      </div>
   );
 };
 

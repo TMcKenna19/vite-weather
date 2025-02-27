@@ -37,34 +37,65 @@ button {
   margin-left: .5rem;
 }
 
-.current-weather {
-  background-color: rgba(240, 248, 255, 0.30);
-  padding: 1rem;
+.current-weather-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
   align-items: center;
+  gap: 5rem;
+  background: rgba(144, 145, 146, 0.24);
   border-radius: 2rem;
-  width: 70rem;
-  margin-top: 1rem;
+  color: white;
+}
+
+.current-weather {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Two equal columns */
+  grid-template-rows: auto auto auto; /* Dynamic row sizes */
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+  width: 40rem;
+}
+
+.temp {
+  font-size: 3.5rem;
+}
+
+/* Make sure the icon takes up both columns */
+.weather-icon {
+  grid-column: span 2; /* Icon spans across both columns */
+  width: 100px;
+  height: 100px;
+  margin-top: 2rem;
+  margin-left: 7rem;
+}
+
+.temp, .feels-like, .humidity, .description, .high-low, .sunrise, .sunset {
+  grid-column: span 1; /* Each item takes up one column */
+}
+
+.location-time {
+  height: 10rem;
+  width: 20rem;
+  border-radius: 2rem;
+  align-content: center;
+  justify-content: center;
 }
 
 .forecast-container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.forecast-grid {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
+  flex-direction: row;
+  gap: 20rem;
 }
 
-.forecast-card {
-  background: rgba(240, 248, 255, 0.30);
-  padding: 1rem;
-  border-radius: 1rem;
+.five-day-forecast {
   text-align: center;
+}
+
+.five-day-table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .weather-icon {
@@ -80,10 +111,20 @@ button {
 }
 
 .hour-card {
-  /* background: #ecf0f1; */
   padding: .2rem;
   text-align: center;
   width: fit-content;
 }
 
+
+/* Responsive for small screens */
+@media (max-width: 500px) {
+  .current-weather {
+    grid-template-columns: 1fr; /* One column for smaller screens */
+  }
+
+  .weather-icon {
+    grid-column: span 1; /* Icon remains centered */
+  }
+}
 
