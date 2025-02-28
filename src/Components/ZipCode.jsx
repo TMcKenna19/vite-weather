@@ -3,7 +3,6 @@ import { useState} from 'react';
 import axios from 'axios';
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-const celsiusToFahrenheit = (celsius) => Math.round((celsius * 1.8 + 32));
 const ZipCode = () => {
   const [zipCode, setZipCode] = useState("");
   const [currentWeather, setCurrentWeather] = useState(null);
@@ -15,7 +14,6 @@ const ZipCode = () => {
     try {
       const [weatherData, forecast] = await Promise.all([
         axios.get(`https://api.openweathermap.org/data/2.5/weather?zip=${zipCode},us&appid=${API_KEY}&units=imperial`),
-
         axios.get(`https://api.openweathermap.org/data/2.5/forecast?zip=${zipCode},us&appid=${API_KEY}&units=imperial`)
       ]);
       setCurrentWeather(weatherData.data);
@@ -84,47 +82,53 @@ const ZipCode = () => {
         </div>
       )}
       <div className="forecast-container">
-        <div className="five-day-forecast">
-        <h2>Your 5 Day Forecast</h2>
-          <div className="five-day-table">
-            {dailyForecast.map((day, index) => (
-                <tbody key={index} className="five-day-row">
-                  <tr>
-                    <th><img
-                      src={`http://openweathermap.org/img/w/${day.weather[0].icon}.png`}
-                      alt={day.weather[0].description}
-                    /></th>
-                    <th>{new Date(day.dt * 1000).toLocaleDateString("en-US", { weekday: "long" })}</th>
-                    <th>{Math.round(day.main.temp)} &deg;F</th>
-                    <th>{day.weather[0].description}</th>
-                  </tr>
-                </tbody>
-            ))}
-          </div>
-        </div>
-        <div className="hourly-forecast">
-          <h2>Hourly Forecast</h2>
-          <div className="hourly-grid">
-            {hourlyForecast.map((hour, index) => (
-              <div key={index} className="hourly-card">
-                <h3>
-                  {new Date(hour.dt * 1000).toLocaleTimeString("en-US", {
-                    hour: "numeric",
-                    minute: "2-digit",
-                    hour12: true,
-                  })}
-                </h3>
-                <img
-                  src={`http://openweathermap.org/img/w/${hour.weather[0].icon}.png`}
-                  alt={hour.weather[0].description}
-                />
-                <p>{Math.round(hour.main.temp)}°F</p>
-                <p>{hour.weather[0].description}</p>
+          {dailyForecast.length > 0 && (
+            <div className="five-day-forecast">
+              <h2>Your 5 Day Forecast</h2>
+              <div className="five-day-table">
+                {dailyForecast.map((day, index) => (
+                  <tbody key={index} className="five-day-row">
+                    <tr>
+                      <th>
+                        <img
+                          src={`http://openweathermap.org/img/w/${day.weather[0].icon}.png`}
+                          alt={day.weather[0].description}
+                        />
+                      </th>
+                      <th>{new Date(day.dt * 1000).toLocaleDateString("en-US", { weekday: "long" })}</th>
+                      <th>{Math.round(day.main.temp)}°F</th>
+                      <th>{day.weather[0].description}</th>
+                    </tr>
+                  </tbody>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+          {hourlyForecast.length > 0 && (
+            <div className="hourly-forecast">
+              <h2>Hourly Forecast</h2>
+              <div className="hourly-grid">
+                {hourlyForecast.map((hour, index) => (
+                  <div key={index} className="hourly-card">
+                    <h3>
+                      {new Date(hour.dt * 1000).toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                    </h3>
+                    <img
+                      src={`http://openweathermap.org/img/w/${hour.weather[0].icon}.png`}
+                      alt={hour.weather[0].description}
+                    />
+                    <p>{Math.round(hour.main.temp)}°F</p>
+                    <p>{hour.weather[0].description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      </div>
     </div>
   )
 }
