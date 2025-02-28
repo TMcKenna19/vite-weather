@@ -13,41 +13,32 @@ input, textarea {
   border-radius: 20px;
   border: 0px;
   padding: 5px;
+  margin-bottom: .5rem;
   font-size: 1rem;
   text-align: center;
 }
 ::placeholder {
   color:#ffffff ;
 }
-
+/* clears zip place holder */
 input:focus::placeholder {
   color: transparent;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #6251ff;
-  color: #ffffffde;
-  cursor: pointer;
-  margin-left: .5rem;
-}
-
-.current-weather-container {
+.current-weather-container, .zip-weather-container {
   display: flex;
   flex-direction: row;
   align-items: center;
+  height: 23rem;
+  padding: 10px;
+  margin-bottom: 2rem;
   gap: 5rem;
   background: rgba(144, 145, 146, 0.24);
   border-radius: 2rem;
   color: white;
 }
 
-.current-weather {
+.current-weather, .zip-current-weather {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Two equal columns */
   grid-template-rows: auto auto auto; /* Dynamic row sizes */
@@ -74,7 +65,7 @@ button {
   grid-column: span 1; /* Each item takes up one column */
 }
 
-.location-time {
+.location-time, .zip-time {
   height: 10rem;
   width: 20rem;
   border-radius: 2rem;
@@ -103,19 +94,17 @@ button {
   width: 100px;
 }
 
-.hourly-grid, .forecast-grid {
+.hourly-grid {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: .5rem;
 }
 
-.hour-card {
-  padding: .2rem;
+.hourly-card {
   text-align: center;
   width: fit-content;
 }
-
 
 /* Responsive for small screens */
 @media (max-width: 500px) {

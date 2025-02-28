@@ -32,9 +32,9 @@ function getDate() {
 }
 
 const WeatherLocation = () => {
-  const [weatherData, setWeatherData] = useState(null);
+  const [currentWeather, setCurrentWeather] = useState(null);
   const [hourlyForecast, setHourlyForecast] = useState([]);
-  const [forecastData, setForecastData] = useState([]);
+  const [dailyForecast, setDailyForecast] = useState([]);
   const [localTime, setLocalTime] = useState('');
   const [currentDate, setCurrentDate] = useState(getDate());
   const [stateAbbr, setStateAbbr] = useState('');
@@ -42,7 +42,7 @@ const WeatherLocation = () => {
 
   const fetchWeatherAndForecast = async (latitude, longitude) => {
     try {
-      const [currentWeather, forecast] = await Promise.all([
+      const [weatherData, forecast] = await Promise.all([
         axios.get("https://api.openweathermap.org/data/2.5/weather", {
           params: { lat: latitude, lon: longitude, appid: API_KEY },
         }),
@@ -50,14 +50,13 @@ const WeatherLocation = () => {
           params: { lat: latitude, lon: longitude, appid: API_KEY, units: "metric" },
         }),
       ]);
-      setWeatherData(currentWeather.data);
+      setCurrentWeather(weatherData.data);
       const hourlyData = forecast.data.list.slice(0, 5);
       setHourlyForecast(hourlyData);
-
-      const timezoneOffset = currentWeather.data.timezone;
+      console.log("location", hourlyData);
+      const timezoneOffset = weatherData.data.timezone;
       const utcDate = new Date();
       const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
-      
       setLocalTime(localDate.toLocaleString("en-US", { 
         timeZone: "UTC",
         hour: "numeric", 
@@ -65,10 +64,10 @@ const WeatherLocation = () => {
         hour12: true 
       }
       ));
-      const dailyForecast = forecast.data.list
+      const dailyForecastData = forecast.data.list
         .filter(item => item.dt_txt.includes("12:00:00"))
         .slice(0, 5);
-      setForecastData(dailyForecast);
+      setDailyForecast(dailyForecastData);
 
       // Fetch State Information using Reverse Geocoding API
       const geoResponse = await axios.get("https://api.openweathermap.org/geo/1.0/reverse", {
@@ -96,35 +95,35 @@ const WeatherLocation = () => {
   }, []);
 
   if (error) return <p>{error}</p>;
-  if (!weatherData) return <p>Loading Weather Data...</p>;
+  if (!currentWeather) return <p>Loading Weather Data...</p>;
 
   return (
     <div>
       <div className="current-weather-container">
         <div className="location-time">
-          <h1>{weatherData.name}, {stateAbbr}</h1>
+          <h1>{currentWeather.name}, {stateAbbr}</h1>
           <h2>{localTime}</h2>
           <h2>{currentDate}</h2>
         </div>
         <div className="current-weather">
-          <h2 className="temp">{kelvinToFahrenheit(weatherData.main.temp)}°F</h2>
+          <h2 className="temp">{kelvinToFahrenheit(currentWeather.main.temp)}°F</h2>
           <img
             className="weather-icon"
-            src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`}
-            alt={weatherData.weather[0].description}
+            src={`http://openweathermap.org/img/w/${currentWeather.weather[0].icon}.png`}
+            alt={currentWeather.weather[0].description}
           />
-          <h2 className="feels-like">Feels like {kelvinToFahrenheit(weatherData.main.feels_like)}°F</h2>
-          <h2 className="humidity">Humidity: {weatherData.main.humidity}%</h2>
-          <h2 className="description">{weatherData.weather[0].description}</h2>
+          <h2 className="feels-like">Feels like {kelvinToFahrenheit(currentWeather.main.feels_like)}°F</h2>
+          <h2 className="humidity">Humidity: {currentWeather.main.humidity}%</h2>
+          <h2 className="description">{currentWeather.weather[0].description}</h2>
           <h2 className="high-low">
-            H: {kelvinToFahrenheit(weatherData.main.temp_max)}°F / L: {kelvinToFahrenheit(weatherData.main.temp_min)}°F
+            L: {kelvinToFahrenheit(currentWeather.main.temp_min)}°F / H: {kelvinToFahrenheit(currentWeather.main.temp_max)}°F
           </h2>
-          <h2 className="sunrise">Sunrise: {new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString("en-US", {
+          <h2 className="sunrise">Sunrise: {new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString("en-US", {
             hour: "numeric",
             minute: "2-digit",
             hour12: true,
           })}</h2>
-          <h2 className="sunset">Sunset: {new Date(weatherData.sys.sunset * 1000).toLocaleTimeString("en-US", {
+          <h2 className="sunset">Sunset: {new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString("en-US", {
             hour: "numeric",
             minute: "2-digit",
             hour12: true,
@@ -135,7 +134,7 @@ const WeatherLocation = () => {
         <div className="five-day-forecast">
           <h2>Your 5 Day Forecast</h2>
           <div className="five-day-table">
-            {forecastData.map((day, index) => (
+            {dailyForecast.map((day, index) => (
                 <tbody key={index} className="five-day-row">
                   <tr>
                     <th><img
@@ -154,7 +153,7 @@ const WeatherLocation = () => {
           <h2>Hourly Forecast</h2>
           <div className="hourly-grid">
             {hourlyForecast.map((hour, index) => (
-              <div key={index} className="hour-card">
+              <div key={index} className="hourly-card">
                 <h3>
                   {new Date(hour.dt * 1000).toLocaleTimeString("en-US", {
                     hour: "numeric",

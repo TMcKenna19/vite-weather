@@ -7,9 +7,9 @@ function App() {
 
   return (
     <>
-      <Greeting/>
-      <WeatherLocation/>
-      {/* <ZipCode/> */}
+      <Greeting/> 
+      <ZipCode/>
+      {/* <WeatherLocation/> */}
     </>
   )
 }
