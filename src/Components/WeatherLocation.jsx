@@ -53,7 +53,6 @@ const WeatherLocation = () => {
       setCurrentWeather(weatherData.data);
       const hourlyData = forecast.data.list.slice(0, 5);
       setHourlyForecast(hourlyData);
-      console.log("location", hourlyData);
       const timezoneOffset = weatherData.data.timezone;
       const utcDate = new Date();
       const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
@@ -93,12 +92,12 @@ const WeatherLocation = () => {
       setError("Geolocation is not supported by your browser.");
     }
   }, []);
-
   if (error) return <p>{error}</p>;
-  if (!currentWeather) return <p>Loading Weather Data...</p>;
+  if (!currentWeather) return <p>Loading Local weather...</p>;
 
   return (
     <div>
+      
       <div className="current-weather-container">
         <div className="location-time">
           <h1>{currentWeather.name}, {stateAbbr}</h1>

@@ -1,17 +1,46 @@
 import React from 'react'
 import { useState} from 'react';
 import axios from 'axios';
-const API_KEY = import.meta.env.VITE_API_KEY;
 
+const API_KEY = import.meta.env.VITE_API_KEY;
+// U.S. State Abbreviation Lookup
+const stateAbbreviations = {
+  "Alabama": "AL", "Alaska": "AK", "Arizona": "AZ", "Arkansas": "AR",
+  "California": "CA", "Colorado": "CO", "Connecticut": "CT", "Delaware": "DE",
+  "Florida": "FL", "Georgia": "GA", "Hawaii": "HI", "Idaho": "ID",
+  "Illinois": "IL", "Indiana": "IN", "Iowa": "IA", "Kansas": "KS",
+  "Kentucky": "KY", "Louisiana": "LA", "Maine": "ME", "Maryland": "MD",
+  "Massachusetts": "MA", "Michigan": "MI", "Minnesota": "MN", "Mississippi": "MS",
+  "Missouri": "MO", "Montana": "MT", "Nebraska": "NE", "Nevada": "NV",
+  "New Hampshire": "NH", "New Jersey": "NJ", "New Mexico": "NM", "New York": "NY",
+  "North Carolina": "NC", "North Dakota": "ND", "Ohio": "OH", "Oklahoma": "OK",
+  "Oregon": "OR", "Pennsylvania": "PA", "Rhode Island": "RI", "South Carolina": "SC",
+  "South Dakota": "SD", "Tennessee": "TN", "Texas": "TX", "Utah": "UT",
+  "Vermont": "VT", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV",
+  "Wisconsin": "WI", "Wyoming": "WY"
+};
 const ZipCode = () => {
   const [zipCode, setZipCode] = useState("");
   const [currentWeather, setCurrentWeather] = useState(null);
   const [hourlyForecast, setHourlyForecast] = useState([]);
   const [dailyForecast, setDailyForecast] = useState([]);
   const [localTime, setLocalTime] = useState(null);
+  const [stateName, setStateName] = useState("");
  
   const fetchWeatherData = async () => {
     try {
+      const zipResponse = await axios.get(`https://api.openweathermap.org/geo/1.0/zip`, {
+        params: { zip: `${zipCode},US`, appid: API_KEY },
+      });
+      const { lat, lon } = zipResponse.data;
+      //Get State from Reverse Geocoding
+      const reverseGeoResponse = await axios.get(`https://api.openweathermap.org/geo/1.0/reverse`, {
+        params: { lat, lon, limit: 1, appid: API_KEY },
+      });
+
+      const state = reverseGeoResponse.data[0]?.state || "Unknown State";
+      setStateName(state);
+      
       const [weatherData, forecast] = await Promise.all([
         axios.get(`https://api.openweathermap.org/data/2.5/weather?zip=${zipCode},us&appid=${API_KEY}&units=imperial`),
         axios.get(`https://api.openweathermap.org/data/2.5/forecast?zip=${zipCode},us&appid=${API_KEY}&units=imperial`)
@@ -19,7 +48,6 @@ const ZipCode = () => {
       setCurrentWeather(weatherData.data);
       const hourlyData = forecast.data.list.slice(0, 5);
       setHourlyForecast(hourlyData);
-      console.log("zip", hourlyData)
       const timezoneOffset = weatherData.data.timezone;
       const utcDate = new Date();
       const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
@@ -34,7 +62,6 @@ const ZipCode = () => {
         .filter(item => item.dt_txt.includes("12:00:00"))
         .slice(0, 5);
       setDailyForecast(dailyForecastData)
-
     } catch (error) {
       console.log(error);
     }
@@ -44,7 +71,7 @@ const ZipCode = () => {
     event.preventDefault();
     fetchWeatherData()
   };
-  
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -58,7 +85,7 @@ const ZipCode = () => {
       {currentWeather && (
         <div className='zip-weather-container'>
           <div className='zip-time'>
-            <h1>{currentWeather.name}</h1>
+            <h1>{currentWeather.name}, {stateName}</h1>
             <h2>{localTime}</h2>
           </div>
           <div className='zip-current-weather'>

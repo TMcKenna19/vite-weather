@@ -13,7 +13,7 @@ function App() {
     </>
   )
 }
-
+  
 export default App
 
 //[x] Weather by city
