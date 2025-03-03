@@ -19,12 +19,16 @@ const stateAbbreviations = {
   "Vermont": "VT", "Virginia": "VA", "Washington": "WA", "West Virginia": "WV",
   "Wisconsin": "WI", "Wyoming": "WY"
 };
+
+
+
 const ZipCode = () => {
   const [zipCode, setZipCode] = useState("");
   const [currentWeather, setCurrentWeather] = useState(null);
   const [hourlyForecast, setHourlyForecast] = useState([]);
   const [dailyForecast, setDailyForecast] = useState([]);
   const [localTime, setLocalTime] = useState(null);
+  const [timezoneDiff, setTimezoneDiff] = useState(null);
   const [stateName, setStateName] = useState("");
  
   const fetchWeatherData = async () => {
@@ -33,11 +37,9 @@ const ZipCode = () => {
         params: { zip: `${zipCode},US`, appid: API_KEY },
       });
       const { lat, lon } = zipResponse.data;
-      //Get State from Reverse Geocoding
       const reverseGeoResponse = await axios.get(`https://api.openweathermap.org/geo/1.0/reverse`, {
         params: { lat, lon, limit: 1, appid: API_KEY },
       });
-
       const state = reverseGeoResponse.data[0]?.state || "Unknown State";
       setStateName(state);
       
@@ -46,9 +48,11 @@ const ZipCode = () => {
         axios.get(`https://api.openweathermap.org/data/2.5/forecast?zip=${zipCode},us&appid=${API_KEY}&units=imperial`)
       ]);
       setCurrentWeather(weatherData.data);
+      console.log('=>', weatherData)
       const hourlyData = forecast.data.list.slice(0, 5);
       setHourlyForecast(hourlyData);
       const timezoneOffset = weatherData.data.timezone;
+      setTimezoneDiff(timezoneOffset);
       const utcDate = new Date();
       const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
       setLocalTime(localDate.toLocaleString("en-US", { 
@@ -95,12 +99,14 @@ const ZipCode = () => {
             <h2 className="humidity">Humidity: {currentWeather.main.humidity}%</h2>
             <h2 className="description">{currentWeather.weather[0].description}</h2>
             <h2 className="high-low">L: {Math.round((currentWeather.main.temp_min))}°F / H: {Math.round((currentWeather.main.temp_max))}°F</h2>
-            <h2 className="sunrise">Sunrise: {new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString("en-US", {
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
+            <h2 className="sunrise">Sunrise: {new Date((currentWeather.sys.sunrise + currentWeather.timezone) * 1000).toLocaleTimeString("en-US", {
+              timeZone: "UTC",
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
           })}</h2>
-          <h2 className="sunset">Sunset: {new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString("en-US", {
+          <h2 className="sunset">Sunset: {new Date((currentWeather.sys.sunset + currentWeather.timezone) * 1000).toLocaleTimeString("en-US", {
+            timeZone: "UTC",
             hour: "numeric",
             minute: "2-digit",
             hour12: true,
