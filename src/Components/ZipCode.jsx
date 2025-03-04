@@ -20,16 +20,13 @@ const stateAbbreviations = {
   "Wisconsin": "WI", "Wyoming": "WY"
 };
 
-
-
 const ZipCode = () => {
   const [zipCode, setZipCode] = useState("");
   const [currentWeather, setCurrentWeather] = useState(null);
   const [hourlyForecast, setHourlyForecast] = useState([]);
   const [dailyForecast, setDailyForecast] = useState([]);
   const [localTime, setLocalTime] = useState(null);
-  const [timezoneDiff, setTimezoneDiff] = useState(null);
-  const [stateName, setStateName] = useState("");
+  const [stateAbbr, setStateAbbr] = useState('');
  
   const fetchWeatherData = async () => {
     try {
@@ -41,18 +38,15 @@ const ZipCode = () => {
         params: { lat, lon, limit: 1, appid: API_KEY },
       });
       const state = reverseGeoResponse.data[0]?.state || "Unknown State";
-      setStateName(state);
-      
+
       const [weatherData, forecast] = await Promise.all([
         axios.get(`https://api.openweathermap.org/data/2.5/weather?zip=${zipCode},us&appid=${API_KEY}&units=imperial`),
         axios.get(`https://api.openweathermap.org/data/2.5/forecast?zip=${zipCode},us&appid=${API_KEY}&units=imperial`)
       ]);
       setCurrentWeather(weatherData.data);
-      console.log('=>', weatherData)
       const hourlyData = forecast.data.list.slice(0, 5);
       setHourlyForecast(hourlyData);
       const timezoneOffset = weatherData.data.timezone;
-      setTimezoneDiff(timezoneOffset);
       const utcDate = new Date();
       const localDate = new Date(utcDate.getTime() + timezoneOffset * 1000);
       setLocalTime(localDate.toLocaleString("en-US", { 
@@ -65,7 +59,10 @@ const ZipCode = () => {
       const dailyForecastData = forecast.data.list  
         .filter(item => item.dt_txt.includes("12:00:00"))
         .slice(0, 5);
-      setDailyForecast(dailyForecastData)
+      setDailyForecast(dailyForecastData);
+
+      const abbreviation = stateAbbreviations[state] || state;
+      setStateAbbr(abbreviation);
     } catch (error) {
       console.log(error);
     }
@@ -89,7 +86,7 @@ const ZipCode = () => {
       {currentWeather && (
         <div className='zip-weather-container'>
           <div className='zip-time'>
-            <h1>{currentWeather.name}, {stateName}</h1>
+            <h1>{currentWeather.name}, {stateAbbr}</h1>
             <h2>{localTime}</h2>
           </div>
           <div className='zip-current-weather'>
