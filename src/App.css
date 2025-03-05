@@ -1,32 +1,54 @@
 #root {
-  max-width: 1280px;
+  max-width: fit-content;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+ul {
+  list-style: none;
+}
+
+/* Menu */
+.menu-links {
+  display: flex;
+  flex-direction: row;
+  align-content: space-between;
+}
+/* button {
+  transition: background-color 0.50s;
+  border-radius: 20px;
+  border: none;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #6251ff;
-  color: aliceblue;
+  background-color: #03162fd0;
+  color: #ffffff;
   cursor: pointer;
-  transition: border-color 0.25s;
 }
+
+button:hover {
+  transition: background-color 0.50s;
+  border-radius: 20px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #2e5e9dd0;
+  color: #ffffff;
+  cursor: pointer;
+} */
 
 input, textarea {
   color: #ffffff;
   height: 2rem;
-  width: 15rem;
+  width: 25rem;
   background-color: #03162fd0;
   border-radius: 20px;
   border: 0px;
   padding: 5px;
-  margin-bottom: .5rem;
+  margin-bottom: 5rem;
   font-size: 1rem;
   text-align: center;
 }
@@ -42,8 +64,9 @@ input:focus::placeholder {
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 23rem;
-  padding: 10px;
+  height: 20rem;
+  padding: .3rem;
+  font-size: 1rem;
   margin-bottom: 2rem;
   gap: 5rem;
   background: rgba(144, 145, 146, 0.24);
@@ -55,14 +78,14 @@ input:focus::placeholder {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Two equal columns */
   grid-template-rows: auto auto auto; /* Dynamic row sizes */
-  gap: 1rem;
-  padding: 2rem;
+  gap: .1rem;
+  margin-left: 8rem;
   text-align: center;
   width: 40rem;
 }
 
 .temp {
-  font-size: 3.5rem;
+  font-size: 3rem;
 }
 
 /* Make sure the icon takes up both columns */
@@ -71,7 +94,7 @@ input:focus::placeholder {
   width: 100px;
   height: 100px;
   margin-top: 2rem;
-  margin-left: 7rem;
+  margin-left: 8rem;
 }
 
 .temp, .feels-like, .humidity, .description, .high-low, .sunrise, .sunset {
@@ -79,11 +102,13 @@ input:focus::placeholder {
 }
 
 .location-time, .zip-time {
-  height: 10rem;
-  width: 20rem;
-  border-radius: 2rem;
+  height: 20rem;
+  width: 15rem;
+  line-height: 1.5rem;
+  margin-left: 5rem;
   align-content: center;
   justify-content: center;
+  /* background-color: rgb(250, 128, 114, 0.200); */
 }
 
 .forecast-container {

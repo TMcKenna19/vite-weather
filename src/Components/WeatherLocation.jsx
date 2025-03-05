@@ -25,7 +25,7 @@ const kelvinToFahrenheit = (kelvin) => Math.round((kelvin - 273.15) * 1.8 + 32);
 const celsiusToFahrenheit = (celsius) => Math.round((celsius * 1.8 + 32));
 
 function getDate() {
-  const dayName = new Date().toLocaleString('en-us', {weekday:'long'})
+  const dayName = new Date().toLocaleString('en-us', {weekday:'short'})
   const month = new Date().toLocaleString('en-us', {month:'short'})
   const day = new Date().getDate();
   return `${dayName}, ${month} ${day}`
@@ -93,7 +93,7 @@ const WeatherLocation = () => {
     }
   }, []);
   if (error) return <p>{error}</p>;
-  if (!currentWeather) return <p>Loading Local weather...</p>;
+  if (!currentWeather) return <h1>Loading Local Weather...</h1>;
 
   return (
     <div>
@@ -111,7 +111,7 @@ const WeatherLocation = () => {
             src={`http://openweathermap.org/img/w/${currentWeather.weather[0].icon}.png`}
             alt={currentWeather.weather[0].description}
           />
-          <h2 className="feels-like">Feels like {kelvinToFahrenheit(currentWeather.main.feels_like)}°F</h2>
+          <h2 className="feels-like">Feels like: {kelvinToFahrenheit(currentWeather.main.feels_like)}°F</h2>
           <h2 className="humidity">Humidity: {currentWeather.main.humidity}%</h2>
           <h2 className="description">{currentWeather.weather[0].description}</h2>
           <h2 className="high-low">

@@ -43,6 +43,7 @@ const ZipCode = () => {
         axios.get(`https://api.openweathermap.org/data/2.5/weather?zip=${zipCode},us&appid=${API_KEY}&units=imperial`),
         axios.get(`https://api.openweathermap.org/data/2.5/forecast?zip=${zipCode},us&appid=${API_KEY}&units=imperial`)
       ]);
+      console.log(weatherData.data);
       setCurrentWeather(weatherData.data);
       const hourlyData = forecast.data.list.slice(0, 5);
       setHourlyForecast(hourlyData);
