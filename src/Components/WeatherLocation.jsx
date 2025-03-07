@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import ZipCode from './ZipCode';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -24,7 +25,7 @@ const stateAbbreviations = {
 const kelvinToFahrenheit = (kelvin) => Math.round((kelvin - 273.15) * 1.8 + 32);
 const celsiusToFahrenheit = (celsius) => Math.round((celsius * 1.8 + 32));
 
-function getDate() {
+function getDate() {  
   const dayName = new Date().toLocaleString('en-us', {weekday:'short'})
   const month = new Date().toLocaleString('en-us', {month:'short'})
   const day = new Date().getDate();
@@ -96,10 +97,12 @@ const WeatherLocation = () => {
   if (!currentWeather) return <h1>Loading Local Weather...</h1>;
 
   return (
+    <>
     <div>
-      
+      <ZipCode/>
       <div className="current-weather-container">
         <div className="location-time">
+          <h3>Current Location</h3>
           <h1>{currentWeather.name}, {stateAbbr}</h1>
           <h2>{localTime}</h2>
           <h2>{currentDate}</h2>
@@ -171,7 +174,8 @@ const WeatherLocation = () => {
           </div>
         </div>
       </div>
-      </div>
+    </div>
+   </>
   );
 };
 

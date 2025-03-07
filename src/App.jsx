@@ -1,16 +1,14 @@
 import './App.css';
 import WeatherLocation from './Components/WeatherLocation';
 import Greeting from './Components/Greeting';
-import ZipCode from './Components/ZipCode';
-import Menu from './Components/Menu';
+
+
 
 function App() {
 
   return (
     <>
       <Greeting/>
-      <Menu/>
-      <ZipCode/>
       <WeatherLocation/>
     </>
   )

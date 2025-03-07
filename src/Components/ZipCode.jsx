@@ -2,6 +2,7 @@ import React from 'react'
 import { useState} from 'react';
 import axios from 'axios';
 
+
 const API_KEY = import.meta.env.VITE_API_KEY;
 // U.S. State Abbreviation Lookup
 const stateAbbreviations = {
@@ -75,6 +76,7 @@ const ZipCode = () => {
   };
 
   return (
+    <>
     <div>
       <form onSubmit={handleSubmit}>
         <input
@@ -112,11 +114,11 @@ const ZipCode = () => {
           </div>
         </div>
       )}
-      <div className="forecast-container">
+      <div className="zip-forecast-container">
           {dailyForecast.length > 0 && (
-            <div className="five-day-forecast">
+            <div className="zip-five-day-forecast">
               <h2>Your 5 Day Forecast</h2>
-              <div className="five-day-table">
+              <div className="zip-five-day-table">
                 {dailyForecast.map((day, index) => (
                   <tbody key={index} className="five-day-row">
                     <tr>
@@ -136,9 +138,9 @@ const ZipCode = () => {
             </div>
           )}
           {hourlyForecast.length > 0 && (
-            <div className="hourly-forecast">
+            <div className="zip-hourly-forecast">
               <h2>Hourly Forecast</h2>
-              <div className="hourly-grid">
+              <div className="zip-hourly-grid">
                 {hourlyForecast.map((hour, index) => (
                   <div key={index} className="hourly-card">
                     <h3>
@@ -161,6 +163,7 @@ const ZipCode = () => {
           )}
         </div>
     </div>
+    </>
   )
 }
 
